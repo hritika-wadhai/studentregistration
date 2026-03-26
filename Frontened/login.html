@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login - Green Valley Public School</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #2f3e9e 0%, #28337b 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.login-box {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.school-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.school-header h1 {
+    color: #2f3e9e;
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.school-header p {
+    color: #666;
+    font-size: 14px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    color: #2f3e9e;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group select,
+.form-group input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    outline: none;
+    border-color: #2f3e9e;
+}
+
+.login-btn {
+    background: #2f3e9e;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    background: #28337b;
+}
+
+.error-message {
+    color: #ff3860;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    display: none;
+}
+
+.role-description {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+    border-left: 4px solid #2f3e9e;
+}
+
+.role-description h4 {
+    color: #2f3e9e;
+    margin-bottom: 10px;
+}
+
+.role-description ul {
+    padding-left: 20px;
+}
+
+.role-description li {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 30px;
+    color: white;
+    font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="login-container">
+    <div class="login-box">
+        <div class="school-header">
+            <h1>Green Valley Public School</h1>
+            <p>Student Admission System</p>
+        </div>
+        
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="userRole">Select Your Role</label>
+                <select id="userRole" required>
+                    <option value="">-- Select Role --</option>
+                    <option value="admin">Admin</option>
+                    <option value="clerk">Admission Clerk</option>
+                    <option value="teacher">Teacher</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="passwordGroup">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+            
+            <button type="submit" class="login-btn">Login</button>
+            
+            <div id="errorMessage" class="error-message">
+                Invalid password for selected role!
+            </div>
+        </form>
+        
+        <div id="roleInfo" class="role-description" style="display: none;">
+            <h4 id="roleTitle">Admin Access</h4>
+            <ul id="rolePermissions">
+                <li>Full access to all features</li>
+                <li>Add, edit, delete student records</li>
+                <li>View and manage reports</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer">
+        &copy; 2026 Green Valley Public School. All rights reserved.
+    </div>
+</div>
+
+<script>
+const rolePasswords = {
+    'admin': 'admin123',
+    'clerk': 'clerk123',
+    'teacher': 'teacher123',
+};
+
+const roleDescriptions = {
+    'admin': {
+        title: 'Admin Access',
+        permissions: [
+            'Full access to all features',
+            'Add, edit, delete student records',
+            'View and manage reports',
+            'Complete system control'
+        ]
+    },
+    'clerk': {
+        title: 'Admission Clerk Access',
+        permissions: [
+            'Add new student admissions',
+            'Edit existing student records',
+            'View all student data',
+            'View daily admission reports'
+        ]
+    },
+    'teacher': {
+        title: 'Teacher Access',
+        permissions: [
+            'View student information',
+            'View daily admission reports',
+            'Print reports',
+            'No edit or delete permissions'
+        ]
+    },
+};
+
+document.getElementById('userRole').addEventListener('change', function() {
+    const role = this.value;
+    const roleInfo = document.getElementById('roleInfo');
+    const passwordGroup = document.getElementById('passwordGroup');
+    
+    if (role) {
+        roleInfo.style.display = 'block';
+        passwordGroup.style.display = 'flex';
+        
+        document.getElementById('roleTitle').textContent = roleDescriptions[role].title;
+        const permissionsList = document.getElementById('rolePermissions');
+        permissionsList.innerHTML = roleDescriptions[role].permissions
+            .map(perm => `<li>${perm}</li>`).join('');
+    } else {
+        roleInfo.style.display = 'none';
+        passwordGroup.style.display = 'none';
+    }
+});
+
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const role = document.getElementById('userRole').value;
+    const password = document.getElementById('password').value;
+    const errorMessage = document.getElementById('errorMessage');
+    
+    if (!role) {
+        errorMessage.textContent = 'Please select a role!';
+        errorMessage.style.display = 'block';
+        return;
+    }
+    
+    if (password === rolePasswords[role]) {
+        sessionStorage.setItem('currentUserRole', role);
+        sessionStorage.setItem('isLoggedIn', 'true');
+        
+        window.location.href = 'student_form.html';
+    } else {
+        errorMessage.textContent = 'Invalid password for selected role!';
+        errorMessage.style.display = 'block';
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+    }
+});
+
+document.getElementById('userRole').addEventListener('change', function() {
+    if (this.value) {
+        document.getElementById('passwordGroup').style.display = 'flex';
+        document.getElementById('password').focus();
+    }
+});
+</script>
+
+</body>
+</html>
